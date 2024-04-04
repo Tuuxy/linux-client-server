@@ -113,7 +113,7 @@ sudo dhclient -v
 
 ```
 
-![[Pasted image 20240404151929.png]]
+![Workstation DHCP Verification](/Assets/dhcp-verification-workstation.png)
 
 And on the server : 
 
@@ -122,7 +122,7 @@ sudo nano /var/lib/dhcp/dhcpd.leases
 
 ```
 
-![[Pasted image 20240404152153.png]]
+![Server DHCP Verification](/Assets/dhcp-verification-server.png)
 
 To install the DNS server using bind ( berkeley internet name domain ):
 
@@ -246,9 +246,9 @@ nameserver 192.168.124.10
 
 Then you can verify that your DNS server works on your workstation : 
 
-![[Pasted image 20240404163904.png]]
+![DNS Verification](/Assets/dns-verification.png)
 
-![[Pasted image 20240404164314.png]]
+![DNS karys.becode](/Assets/dns-karys.becode.png)
 
 
 Setting up apache :
@@ -332,11 +332,12 @@ After that you can go to your webpage :
 http://ip/glpi ( for me it was http://192.168.124.10/glpi and you can start configuring the glpi and follow the instructions , use the user that you created and the database that you created to initiate the glpi on this database )
 
 You'll get default credentials that you can use to connect to the glpi afterwards : 
-![[Pasted image 20240404145125.png]]
+
+![GLPI Defaults](/Assets/glpi-default-acc.png)
 
 And you'll get access to the glpi , don't forget to change the defaults passwords : 
-![[Pasted image 20240404145229.png]]
 
+![GLPI Menu](/Assets/glpi-menu.png)
 
 Let's configure the back-up disk : 
 
