@@ -340,25 +340,72 @@ And you'll get access to the glpi , don't forget to change the defaults password
 
 ![GLPI Menu](/Assets/glpi-menu.png)
 
-Let's configure the back-up disk : 
+Let's configure the back-up system :
+
+Here is a list of files and folders to backup : 
+
+- /etc/ssh : SSH server config
+- /etc/apache2/apache2.conf : Apache main config
+- /etc/apache2/sites-available/* : Apache sites config 
+- /etc/apache2/ports.conf : Apache ports config 
+- /etc/bind : DNS config folder
+- /etc/dhcp/dhcpd.conf : DHCP config
+- /etc/netplan/01-static.yaml : Netplan config 
+- /etc/mysql/mariadb.conf.d/ : Mysql config folder
+- /var/www/html/glpi/config/ : GLPI config folder
+
+Now make a script to backup those files : 
 
 ```
-# On the Host: Create a backup disk
+#!/bin/bash
 
-qemu-img create -f qcow2 backup_disk.qcow2 10G
+backup_dir="/backups"
 
-# Attach it to the VM 
+timestamp=$(date +"%Y%m%d%H%M%S")
 
-sudo virsh attach-disk Ubuntu-Server ~/backup_disk.gcow2 vdb
+# Creates a backup directory 
 
-# On the VM : Partition the disk 
+mkdir -p "$backup_dir"
 
-sudo fdisk /dev/vdb
 
-# Format the partition
+sudo cp -r /etc/ssh "$backup_dir/ssh_$timestamp"
+sudo cp /etc/apache2/apache2.conf "$backup_dir/apache2.conf_$timestamp"
+sudo cp -r /etc/apache2/sites-available "$backup_dir/apache_sites_$timestamp"
+sudo cp /etc/apache2/ports.conf "$backup_dir/apache_ports_$timestamp"
+sudo cp -r /etc/bind "$backup_dir/bind_$timestamp"
+sudo cp /etc/dhcp/dhcpd.conf "$backup_dir/dhcpd.conf_$timestamp"
+sudo cp /etc/netplan/01-static.yaml "$backup_dir/netplan_$timestamp"
+sudo cp -r /etc/mysql/mariadb.conf.d "$backup_dir/mysql_$timestamp"
+sudo cp -r /var/www/html/glpi/config "$backup_dir/glpi_$timestamp"
 
-sudo mkfs.ext4 /dev/vdb1
+
+sudo tar -czvf "$backup_dir/backup_$timestamp.tar.gz" "$backup_dir"
+
+# Removes uncompressed backup directory
+
+sudo rm -rf "$backup_dir"
+
+echo "Backup completed at $backup_dir/backup_$timestamp.tar.gz"
+
+
+# Then set permissions
+
+chmod 750 backup_script.sh
 
 ```
 
-Work In Progress - unfinished ! 
+And using cron jobs I make it run every sundays at midnight :
+
+```
+# Opening cron jobs file
+
+crontab -e
+
+# Add the line :
+
+0 0 * * 0 /backup_script.sh
+
+```
+
+
+And now, our server should back-up the configuration files every sundays at midnight. 
