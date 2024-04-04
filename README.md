@@ -1,5 +1,4 @@
-A solo project to learn Linux 
-[[Assignment]]
+A solo project to learn Linux ( see Assignment.md for references )
 
 For both the Linux server and the workstation I chose Ubuntu because it's a stable distribution and since it's user friendly it'll be easier for employees that are used to windows. I chose the same distribution for the server and the workstation for simplicity and compatibility.
 
